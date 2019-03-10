@@ -2,7 +2,6 @@ import requests
 from bs4 import BeautifulSoup
 import re
 
-
 def scrape(n, save_func):
   # Initializing class
   escortfish = EscortFish(save_func=save_func)
@@ -50,7 +49,16 @@ class EscortFish():
 
     spans = soup.find_all('span', {'class' : 'location-text'})
     for span in spans:
+      from geopy.geocoders import Nominatim
+      geolocator = Nominatim(user_agent="APP")
       location = (span.get_text())
+      try:
+        loc = geolocator.geocode(location)
+        latitude = loc.latitude
+        longitude = loc.longitude
+      except Exception:
+        latitude = None
+        longitude = None
 
     age = self.find_by_label(soup, "Age:").strip()
 
@@ -74,7 +82,9 @@ class EscortFish():
       'ad_text':ad_text,
       'time':time,
       'date':date,
-      'image':image
+      'image':image,
+      'latitude':latitude,
+      'longitude':longitude
     }
     self.save_func(ad_data)
 
