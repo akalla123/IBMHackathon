@@ -13,6 +13,9 @@ PHONE_INSTANCE_URI = PHONE_BASE_URI + 'instance/'
 PHONE_AREA_URI = PHONE_BASE_URI + 'area_code/'
 PHONE_AREA_INSTANCE = PHONE_BASE_URI + 'area_code/instance/'
 
+store = Graph()
+phone = Graph(identifier=URIRef(PHONE_BASE_URI))
+
 # Bind a few prefix, namespace pairs for pretty output
 store.bind("dc", DC)
 store.bind("foaf", FOAF)
@@ -49,7 +52,6 @@ def saveAdToRDF(dictionay):
 
     with open('phones.ttl', 'ab') as f:
         f.write(phone.serialize(format='turtle'))
-
 def download(n):
 	s.scrape(n, save_func=saveAdToRDF)
 
